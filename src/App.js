@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState, useEffect, useRef } from 'react';
-import { Input, Button, Form } from 'semantic-ui-react';
+import { Input, Button, Form, Table } from 'semantic-ui-react';
 import axios from 'axios';
 
 const App = () => {
@@ -19,7 +19,7 @@ const App = () => {
         );
         axios
             .get(
-                `https://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${lat},${long}&days=4&aqi=no&alerts=no
+                `https://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${lat},${long}&days=3&aqi=no&alerts=no
         `
             )
             .then((res) => setWeatherInfo(res?.data));
@@ -38,25 +38,92 @@ const App = () => {
     const onFormSubmit = () => {
         axios
             .get(
-                `http://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${city}&days=4&aqi=no&alerts=no`
+                `http://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${city}&days=3&aqi=no&alerts=no`
             )
             .then((res) => setSearchInfo(res.data));
     };
 
-    return (
-        <div>
-            <Form onSubmit={onFormSubmit}>
-                <Button content="Your City =>" onClick={onButtonClick} />
-                <Input
-                    value={city}
-                    ref={inputEl}
-                    placeholder={weatherInfo?.location?.region}
-                    onChange={onInputChange}
-                />
-            </Form>
+    const info = searchInfo ? searchInfo : weatherInfo;
 
-            <p>{searchInfo ? searchInfo?.location?.region : weatherInfo?.location?.region}</p>
-            <p>{searchInfo ? searchInfo?.location?.country : weatherInfo?.location?.country}</p>
+    return (
+        <div className="App">
+            <div className="left-side">
+                <Form className="input-form" onSubmit={onFormSubmit}>
+                    <Button
+                        size="large"
+                        content="Your City =>"
+                        onClick={onButtonClick}
+                    />
+                    <Input
+                        size="large"
+                        value={city}
+                        ref={inputEl}
+                        placeholder={weatherInfo?.location?.region}
+                        onChange={onInputChange}
+                    />
+                </Form>
+
+                <div className="info-container">
+                    <div className="city-info">
+                        <p>
+                            {info?.location?.region} / {info?.location?.country}
+                        </p>
+                        <p>{info?.location?.localtime}</p>
+                    </div>
+                    <div className="weather-info">
+                        <div className="icon">
+                            <img
+                                src={info?.current?.condition?.icon}
+                                alt="weather-icon"
+                            />
+                            <p>
+                                {Math.round(info?.current?.temp_c)}{' '}
+                                <sup>°C</sup>
+                            </p>
+                        </div>
+                        <p id="description">{info?.current?.condition?.text}</p>
+                        <div className="hum-wind">
+                            <Table basic="very">
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.HeaderCell
+                                            style={{ opacity: 0.6 }}
+                                        >
+                                            Humidity
+                                        </Table.HeaderCell>
+                                        <Table.HeaderCell
+                                            style={{ opacity: 0.6 }}
+                                        >
+                                            Wind Speed
+                                        </Table.HeaderCell>
+                                    </Table.Row>
+                                </Table.Header>
+
+                                <Table.Body>
+                                    <Table.Row>
+                                        <Table.Cell
+                                            style={{
+                                                fontWeight: 400,
+                                                fontSize: '1.2rem',
+                                            }}
+                                        >
+                                            {info?.current?.humidity}
+                                        </Table.Cell>
+                                        <Table.Cell
+                                            style={{
+                                                fontWeight: 400,
+                                                fontSize: '1.2rem',
+                                            }}
+                                        >
+                                            {info?.current?.wind_kph} km/h
+                                        </Table.Cell>
+                                    </Table.Row>
+                                </Table.Body>
+                            </Table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
