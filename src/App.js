@@ -2,6 +2,8 @@ import './App.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { Input, Button, Form, Table } from 'semantic-ui-react';
 import axios from 'axios';
+import LineChart from './components/LineChart';
+
 
 const App = () => {
     const [lat, setLat] = useState('');
@@ -123,6 +125,9 @@ const App = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="right-side">
+                <LineChart graph={info?.forecast?.forecastday[0]?.hour} />
             </div>
         </div>
     );
