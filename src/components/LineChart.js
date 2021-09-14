@@ -17,7 +17,7 @@ const LineChart = ({graph}) => {
                         borderColor: [
                             "blue"
                         ],
-                        borderWidth: 3
+                        borderWidth: 2
                     }]
                 }}
                 height={200}
@@ -33,14 +33,23 @@ const LineChart = ({graph}) => {
                         line : {
                             tension : 0,
                             fill : true,
-                            borderJoinStyle : "round"
+                            borderJoinStyle : "miter"
                         }
                     },
                     scales : {
+                        x : {
+                            display: false,
+                        },
                         y : {
                             beginAtZero : true,
+                            display : false,
                         }
                     },
+                    plugins : {
+                        legend: {
+                            display: false,
+                        },
+                    }
                 }}
             />
         </div>
