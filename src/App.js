@@ -135,7 +135,11 @@ const App = () => {
             </div>
             <div className="right-side">
                 <LineChart graph={info?.forecast?.forecastday[0]?.hour} />
-                <Card />
+                <div className="card-container">
+                    <Card day="Today" icon={} temp={} />
+                    <Card day={} icon={} temp={} />
+                    <Card day={} icon={} temp={} />
+                </div>
             </div>
         </div>
     );
