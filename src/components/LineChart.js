@@ -22,7 +22,7 @@ const LineChart = ({graph}) => {
                     }]
                 }}
                 height={200}
-                width={800}
+                width={900}
                 options={{
                     elements : {
                         point : {
@@ -57,4 +57,4 @@ const LineChart = ({graph}) => {
     )
 }
 
-export default LineChart
+export default React.memo(LineChart)

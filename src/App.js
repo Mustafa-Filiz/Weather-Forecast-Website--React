@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Input, Button, Form, Table } from 'semantic-ui-react';
 import axios from 'axios';
 import LineChart from './components/LineChart';
+import Card from "./components/Card"
 
 
 const App = () => {
@@ -48,6 +49,7 @@ const App = () => {
     const info = searchInfo ? searchInfo : weatherInfo;
     const date = new Date(info?.location?.localtime_epoch * 1000).toLocaleDateString("en-GB", {dateStyle : "full"})
     const time = new Date(info?.location?.localtime_epoch * 1000).toLocaleTimeString("en-GB", {timeStyle : "short"})
+    const lastUpdated = new Date(info?.current?.last_updated_epoch * 1000).toLocaleString("en-GB", {dateStyle : "medium" , timeStyle : "short"})
 
 
     return (
@@ -128,10 +130,12 @@ const App = () => {
                             </Table>
                         </div>
                     </div>
+                    <p>Last updated in {lastUpdated}</p>
                 </div>
             </div>
             <div className="right-side">
                 <LineChart graph={info?.forecast?.forecastday[0]?.hour} />
+                <Card />
             </div>
         </div>
     );
