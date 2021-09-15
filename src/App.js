@@ -115,7 +115,7 @@ const App = () => {
                                                 fontSize: '1.2rem',
                                             }}
                                         >
-                                            {info?.current?.humidity}
+                                            {info?.current?.humidity} %
                                         </Table.Cell>
                                         <Table.Cell
                                             style={{
