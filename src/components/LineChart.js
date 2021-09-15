@@ -10,13 +10,13 @@ const LineChart = ({graph}) => {
                 data={{
                     labels : graph?.map((item) => item.time.slice(11,16)),
                     datasets: [{
-                        label: '°C',
+                        label: 'Temperature',
                         data: graph?.map((item) => Math.round(item.temp_c)),
                         backgroundColor: [
                             "#EEF4FE"
                         ],
                         borderColor: [
-                            "blue"
+                            "#5596F6"
                         ],
                         borderWidth: 2
                     }]

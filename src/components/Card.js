@@ -1,12 +1,15 @@
 import React from 'react'
 
-const Card = () => {
+const Card = ({today, info}) => {
+
+    const day = new Date(info?.date_epoch * 1000).toLocaleDateString("en-GB", {dateStyle : "medium"}).slice(0,8)
+
     return (
         <div className="card">
-            <h4>Today</h4>
-            <div className="mini-icon"><img src="" alt="" />ICON</div>
-            <h5>Temperature</h5>
-            <p>25 <sup>°C</sup></p>
+            <h2>{today ? today : day}</h2>
+            <div className="mini-icon"><img src={info?.day?.condition?.icon} alt="icon" /></div>
+            <p>Avg. Temp.</p>
+            <p style={{fontSize : "1.4rem"}}>{Math.round(info?.day?.avgtemp_c)} <sup>°C</sup></p>
         </div>
     )
 }
