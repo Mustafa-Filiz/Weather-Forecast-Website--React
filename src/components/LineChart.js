@@ -4,7 +4,8 @@ import {Line} from "react-chartjs-2"
 const LineChart = ({graph}) => {
     
     return (
-        <div>
+        <div className="line-chart">
+            <h3 style={{opacity : 0.7}}>Temperature</h3>
             <Line 
                 data={{
                     labels : graph?.map((item) => item.time.slice(11,16)),
@@ -27,13 +28,13 @@ const LineChart = ({graph}) => {
                         point : {
                             radius : 0,
                             pointStyle : "circle",
-                            hitRadius : 10,
-                            hoverRadius : 5,
+                            hitRadius : 15,
+                            hoverRadius : 8,
                         },
                         line : {
                             tension : 0,
                             fill : true,
-                            borderJoinStyle : "miter"
+                            borderJoinStyle : "round"
                         }
                     },
                     scales : {

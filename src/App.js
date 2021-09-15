@@ -46,6 +46,9 @@ const App = () => {
     };
 
     const info = searchInfo ? searchInfo : weatherInfo;
+    const date = new Date(info?.location?.localtime_epoch * 1000).toLocaleDateString("en-GB", {dateStyle : "full"})
+    const time = new Date(info?.location?.localtime_epoch * 1000).toLocaleTimeString("en-GB", {timeStyle : "short"})
+
 
     return (
         <div className="App">
@@ -70,7 +73,8 @@ const App = () => {
                         <p>
                             {info?.location?.region} / {info?.location?.country}
                         </p>
-                        <p>{info?.location?.localtime}</p>
+                        <p>{date}</p>
+                        <p>{time}</p>
                     </div>
                     <div className="weather-info">
                         <div className="icon">
