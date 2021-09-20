@@ -6,6 +6,7 @@ import LineChart from './components/LineChart';
 import Card from './components/Card';
 import SearchArea from './components/SearchArea';
 import ResultArea from './components/ResultArea';
+import LoadingPage from './components/LoadingPage';
 
 const App = () => {
     const [lat, setLat] = useState('');
@@ -74,30 +75,29 @@ const App = () => {
 
     return (
         <div className="App">
-            <div className="left-side">
-                <SearchArea
-                    onFormSubmit={onFormSubmit}
-                    onButtonClick={onButtonClick}
-                    city={city}
-                    inputEl={inputEl}
-                    weatherInfo={weatherInfo}
-                    onInputChange={onInputChange}
-                />
-                <ResultArea
-                    info={info}
-                    date={date}
-                    time={time}
-                    lastUpdated={lastUpdated}
-                />
-            </div>
-            <div className="right-side">
-                <LineChart graph={info?.forecast?.forecastday[0]?.hour} />
-                <div className="card-container">
-                    <Card today="Today" info={info?.forecast?.forecastday[0]} />
-                    <Card info={info?.forecast?.forecastday[1]} />
-                    <Card info={info?.forecast?.forecastday[2]} />
-                </div>
-            </div>
+            {!weatherInfo ? <LoadingPage /> : (
+            <><div className="left-side">
+                    <SearchArea
+                        onFormSubmit={onFormSubmit}
+                        onButtonClick={onButtonClick}
+                        city={city}
+                        inputEl={inputEl}
+                        weatherInfo={weatherInfo}
+                        onInputChange={onInputChange} />
+                    <ResultArea
+                        info={info}
+                        date={date}
+                        time={time}
+                        lastUpdated={lastUpdated} />
+                </div><div className="right-side">
+                        <LineChart graph={info?.forecast?.forecastday[0]?.hour} />
+                        <div className="card-container">
+                            <Card today="Today" info={info?.forecast?.forecastday[0]} />
+                            <Card info={info?.forecast?.forecastday[1]} />
+                            <Card info={info?.forecast?.forecastday[2]} />
+                        </div>
+                    </div></>
+            )}
         </div>
     );
 };
