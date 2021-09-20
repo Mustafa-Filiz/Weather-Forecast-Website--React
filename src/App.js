@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Input, Button, Form, Table } from 'semantic-ui-react';
 import axios from 'axios';
 import LineChart from './components/LineChart';
-import Card from "./components/Card"
+import Card from './components/Card';
+import SearchArea from './components/SearchArea';
 
 
 const App = () => {
@@ -13,19 +14,30 @@ const App = () => {
     const [weatherInfo, setWeatherInfo] = useState('');
     const [searchInfo, setSearchInfo] = useState('');
 
+    const fetchLocation = async () => {
+        window.navigator.geolocation.getCurrentPosition(position => {
+            setLat(position.coords.latitude);
+        });
+        window.navigator.geolocation.getCurrentPosition(position => {
+            setLong(position.coords.longitude);
+        });
+    };
+
+    const fetchWeatherInfo = async () => {
+        try {
+            const response = await axios.get(
+                `https://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${lat},${long}&days=3&aqi=no&alerts=no`
+            );
+            setWeatherInfo(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+
+    };
+
     useEffect(() => {
-        window.navigator.geolocation.getCurrentPosition((position) =>
-            setLat(position?.coords?.latitude)
-        );
-        window.navigator.geolocation.getCurrentPosition((position) =>
-            setLong(position?.coords?.longitude)
-        );
-        axios
-            .get(
-                `https://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${lat},${long}&days=3&aqi=no&alerts=no
-        `
-            )
-            .then((res) => setWeatherInfo(res?.data));
+        fetchLocation();
+        fetchWeatherInfo();
     }, [lat, long]);
 
     const inputEl = useRef(null);
@@ -39,37 +51,33 @@ const App = () => {
     };
 
     const onFormSubmit = () => {
-        axios
+        try {
+            axios
             .get(
                 `http://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${city}&days=3&aqi=no&alerts=no`
             )
             .then((res) => setSearchInfo(res.data));
+        } catch (error) {
+            console.log(error);
+        }
+
     };
 
     const info = searchInfo ? searchInfo : weatherInfo;
-    const date = new Date(info?.location?.localtime_epoch * 1000).toLocaleDateString("en-GB", {dateStyle : "full"})
-    const time = new Date(info?.location?.localtime_epoch * 1000).toLocaleTimeString("en-GB", {timeStyle : "short"})
-    const lastUpdated = new Date(info?.current?.last_updated_epoch * 1000).toLocaleString("en-GB", {dateStyle : "medium" , timeStyle : "short"})
-
+    const date = new Date(
+        info?.location?.localtime_epoch * 1000
+    ).toLocaleDateString('en-GB', { dateStyle: 'full' });
+    const time = new Date(
+        info?.location?.localtime_epoch * 1000
+    ).toLocaleTimeString('en-GB', { timeStyle: 'short' });
+    const lastUpdated = new Date(
+        info?.current?.last_updated_epoch * 1000
+    ).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
 
     return (
         <div className="App">
             <div className="left-side">
-                <Form className="input-form" onSubmit={onFormSubmit}>
-                    <Button
-                        size="large"
-                        content="Your City =>"
-                        onClick={onButtonClick}
-                    />
-                    <Input
-                        size="large"
-                        value={city}
-                        ref={inputEl}
-                        placeholder={weatherInfo?.location?.region}
-                        onChange={onInputChange}
-                    />
-                </Form>
-
+                <SearchArea onFormSubmit={onFormSubmit} onButtonClick={onButtonClick} city={city} inputEl={inputEl} weatherInfo={weatherInfo} onInputChange={onInputChange} />
                 <div className="info-container">
                     <div className="city-info">
                         <p>
@@ -91,43 +99,14 @@ const App = () => {
                         </div>
                         <p id="description">{info?.current?.condition?.text}</p>
                         <div className="hum-wind">
-                            <Table basic="very">
-                                <Table.Header>
-                                    <Table.Row>
-                                        <Table.HeaderCell
-                                            style={{ opacity: 0.6 }}
-                                        >
-                                            Humidity
-                                        </Table.HeaderCell>
-                                        <Table.HeaderCell
-                                            style={{ opacity: 0.6 }}
-                                        >
-                                            Wind Speed
-                                        </Table.HeaderCell>
-                                    </Table.Row>
-                                </Table.Header>
-
-                                <Table.Body>
-                                    <Table.Row>
-                                        <Table.Cell
-                                            style={{
-                                                fontWeight: 400,
-                                                fontSize: '1.2rem',
-                                            }}
-                                        >
-                                            {info?.current?.humidity} %
-                                        </Table.Cell>
-                                        <Table.Cell
-                                            style={{
-                                                fontWeight: 400,
-                                                fontSize: '1.2rem',
-                                            }}
-                                        >
-                                            {info?.current?.wind_kph} km/h
-                                        </Table.Cell>
-                                    </Table.Row>
-                                </Table.Body>
-                            </Table>
+                            <div className="humidity">
+                                <h5>Humidity</h5><div className="line"/>
+                                <p>{info?.current?.humidity} %</p>
+                            </div>
+                            <div className="wind">
+                                <h5>Wind Speed</h5><div className="line"/>
+                                <p>{info?.current?.wind_kph} km/h</p>
+                            </div>
                         </div>
                     </div>
                     <p>Last updated in {lastUpdated}</p>

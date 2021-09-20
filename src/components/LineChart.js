@@ -1,11 +1,12 @@
+import { Paper } from '@material-ui/core'
 import React from 'react'
 import {Line} from "react-chartjs-2"
 
 const LineChart = ({graph}) => {
     
     return (
-        <div className="line-chart">
-            <h3 style={{opacity : 0.7}}>Temperature</h3>
+        <Paper elevation={3}>
+            <h3 style={{opacity : 0.7, padding : "1rem"}}>Temperature</h3>
             <Line 
                 data={{
                     labels : graph?.map((item) => item.time.slice(11,16)),
@@ -53,7 +54,7 @@ const LineChart = ({graph}) => {
                     }
                 }}
             />
-        </div>
+        </Paper>
     )
 }
 
