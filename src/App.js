@@ -44,7 +44,6 @@ const App = () => {
 
     const inputEl = useRef(null);
     const onButtonClick = () => {
-        // `current` points to the mounted text input element
         inputEl.current.focus();
     };
 
@@ -56,7 +55,7 @@ const App = () => {
         try {
             axios
                 .get(
-                    `http://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${city}&days=3&aqi=no&alerts=no`
+                    `https://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${city}&days=3&aqi=no&alerts=no`
                 )
                 .then((res) => setSearchInfo(res.data));
         } catch (error) {
