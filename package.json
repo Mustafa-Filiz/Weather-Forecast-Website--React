@@ -15,6 +15,7 @@
     "axios": "^0.21.4",
     "chart.js": "^3.5.1",
     "create-react-app": "^4.0.3",
+    "netlify-cli": "^6.9.28",
     "react": "^17.0.2",
     "react-chartjs-2": "^3.0.4",
     "react-dom": "^17.0.2",
