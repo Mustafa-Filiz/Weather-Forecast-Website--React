@@ -16,6 +16,12 @@
     justify-content: space-evenly;
 }
 
+.input-form{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
 .city-info{
     width: 400px;
     font-size: 1.4rem;
