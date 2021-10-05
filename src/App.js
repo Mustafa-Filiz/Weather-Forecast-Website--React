@@ -1,6 +1,5 @@
 import './App.css';
 import React, { useState, useEffect, useRef } from 'react';
-import { Input, Button, Form, Table } from 'semantic-ui-react';
 import axios from 'axios';
 import LineChart from './components/LineChart';
 import Card from './components/Card';
@@ -15,30 +14,33 @@ const App = () => {
     const [weatherInfo, setWeatherInfo] = useState('');
     const [searchInfo, setSearchInfo] = useState('');
 
-    const fetchLocation = async () => {
-        window.navigator.geolocation.getCurrentPosition((position) => {
-            setLat(position.coords.latitude);
-        });
-        window.navigator.geolocation.getCurrentPosition((position) => {
-            setLong(position.coords.longitude);
-        });
+    const success = async (pos) => {
+        const coordination = await pos.coords;
+        setLat(coordination.latitude);
+        setLong(coordination.longitude);
     };
 
+    const fetchLocation = () => {
+        window.navigator.geolocation.getCurrentPosition(success);
+    };
+    
     const fetchWeatherInfo = async () => {
-        try {
-            const response = await axios.get(
-                `https://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${lat},${long}&days=3&aqi=no&alerts=no`
-            );
-            setWeatherInfo(response.data);
-        } catch (error) {
-            console.log(error);
+        if(lat && long){
+            try {
+                const response = await axios.get(
+                    `https://api.weatherapi.com/v1/forecast.json?key=73ed49046fd4425c884172718210709&q=${lat},${long}&days=3&aqi=no&alerts=no`
+                );
+                setWeatherInfo(response.data);
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 
     useEffect(() => {
         fetchLocation();
         fetchWeatherInfo();
-    }, [lat, long]);
+    }, [long]);
 
     const inputEl = useRef(null);
     const onButtonClick = () => {
@@ -75,28 +77,40 @@ const App = () => {
 
     return (
         <div className="App">
-            {!weatherInfo ? <LoadingPage /> : (
-            <><div className="left-side">
-                    <SearchArea
-                        onFormSubmit={onFormSubmit}
-                        onButtonClick={onButtonClick}
-                        city={city}
-                        inputEl={inputEl}
-                        weatherInfo={weatherInfo}
-                        onInputChange={onInputChange} />
-                    <ResultArea
-                        info={info}
-                        date={date}
-                        time={time}
-                        lastUpdated={lastUpdated} />
-                </div><div className="right-side">
-                        <LineChart graph={info?.forecast?.forecastday[0]?.hour} />
+            {!weatherInfo ? (
+                <LoadingPage />
+            ) : (
+                <>
+                    <div className="left-side">
+                        <SearchArea
+                            onFormSubmit={onFormSubmit}
+                            onButtonClick={onButtonClick}
+                            city={city}
+                            inputEl={inputEl}
+                            weatherInfo={weatherInfo}
+                            onInputChange={onInputChange}
+                        />
+                        <ResultArea
+                            info={info}
+                            date={date}
+                            time={time}
+                            lastUpdated={lastUpdated}
+                        />
+                    </div>
+                    <div className="right-side">
+                        <LineChart
+                            graph={info?.forecast?.forecastday[0]?.hour}
+                        />
                         <div className="card-container">
-                            <Card today="Today" info={info?.forecast?.forecastday[0]} />
+                            <Card
+                                today="Today"
+                                info={info?.forecast?.forecastday[0]}
+                            />
                             <Card info={info?.forecast?.forecastday[1]} />
                             <Card info={info?.forecast?.forecastday[2]} />
                         </div>
-                    </div></>
+                    </div>
+                </>
             )}
         </div>
     );
